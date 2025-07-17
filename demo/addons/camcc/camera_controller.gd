@@ -268,7 +268,6 @@ func _ready() -> void:
 
 	# Initial springArmValue must be set in the _ready() function due to have access to the SpringArmComponent
 	_spring_arm.spring_length=zoomInitialValue
-	change_cameraMode(cameraMode)
 
 # In each physic process step if we dont want that the camera follows the parent
 func _physics_process(_delta: float) -> void:
@@ -492,7 +491,6 @@ func change_cameraMode(value : CAMERA_MODE):
 					ycameraRotationEnabled=true
 					xcameraRotationEnabled=true
 
-
 					if (yrotationBehind.has(CAMERA_MODE.FULL) and yrotationBehind[CAMERA_MODE.FULL]):
 						doing_cameraTransition(CAMERA_MOVEMENT.YROTATION,rotation.y,get_parent().get_armature().rotation.y,modeTransitionsNumFrames)
 
@@ -504,7 +502,7 @@ func get_context() -> CameraControllerData :
 		context.cameraControllerRotation = rotation
 		context.cameraControllerPosition = position
 		context.cameraRotation = get_node("SpringArm3D/Camera3D").rotation
-		context.cameraPosition = get_node("SpringArm3D/Camera3D").rotation
+		context.cameraPosition = get_node("SpringArm3D/Camera3D").position
 		context.cameraControllerSpringArmRotation = get_node("SpringArm3D").rotation
 		context.cameraControllerSpringArmPosition = get_node("SpringArm3D").position
 		context.cameraControllerSpringArmLength = get_node("SpringArm3D").spring_length
