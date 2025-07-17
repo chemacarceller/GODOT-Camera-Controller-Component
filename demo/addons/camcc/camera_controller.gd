@@ -353,7 +353,7 @@ func _input(event):
 # The function's structure of all these function's are identical so only one function is created indicating the camera movement to be done
 func doing_cameraTransition(cameraMovement : CAMERA_MOVEMENT, initialValue: float, finalValue: float, framesNum : int):
 	# Only if it is enabled
-	if _isEnabled :
+	if _isEnabled:
 		# if framesNum is less than 1 the movement is done and returns
 		if framesNum < 1:
 			rotation.y=finalValue
@@ -464,22 +464,19 @@ func change_cameraMode(value : CAMERA_MODE):
 					doing_cameraTransition(CAMERA_MOVEMENT.XMOVEMENT,position.x,xmovementInitialValue,modeTransitionsNumFrames)
 					doing_cameraTransition(CAMERA_MOVEMENT.YCAMERAROTATION,_camera3D.rotation.y,ycameraRotationInitialValue,modeTransitionsNumFrames)
 					doing_cameraTransition(CAMERA_MOVEMENT.XCAMERAROTATION,_camera3D.rotation.x,xcameraRotationInitialValue,modeTransitionsNumFrames)
-					doing_cameraTransition(CAMERA_MOVEMENT.ZOOM,_spring_arm.spring_length,zoomInitialValue,modeTransitionsNumFrames)
 
 			CAMERA_MODE.FIRST_PERSON:
 					yrotationEnabled=true
 					xrotationEnabled=true
 					ymovementEnabled=false
 					xmovementEnabled=false
-					zoomEnabled=false
 					ycameraRotationEnabled=false
 					xcameraRotationEnabled=false
+					zoomEnabled=false
 
 					# The first person camera mode is a special movement, although the cameracontroller's rotation movement is enabled
 					# it should be positioned correctly to the initial value so that the camera is point to the forward vector
 					# It should be configured in the right mode modifying the InitialValues
-					doing_cameraTransition(CAMERA_MOVEMENT.YROTATION,rotation.y,yrotationInitialValue,modeTransitionsNumFrames)
-					doing_cameraTransition(CAMERA_MOVEMENT.XROTATION,rotation.x,xrotationInitialValue,modeTransitionsNumFrames)
 					doing_cameraTransition(CAMERA_MOVEMENT.YMOVEMENT,position.y,ymovementInitialValue,modeTransitionsNumFrames)
 					doing_cameraTransition(CAMERA_MOVEMENT.XMOVEMENT,position.x,xmovementInitialValue,modeTransitionsNumFrames)
 					doing_cameraTransition(CAMERA_MOVEMENT.XCAMERAROTATION,_camera3D.rotation.x,xcameraRotationInitialValue,modeTransitionsNumFrames)
@@ -498,12 +495,6 @@ func change_cameraMode(value : CAMERA_MODE):
 
 					if (yrotationBehind.has(CAMERA_MODE.FULL) and yrotationBehind[CAMERA_MODE.FULL]):
 						doing_cameraTransition(CAMERA_MOVEMENT.YROTATION,rotation.y,get_parent().get_armature().rotation.y,modeTransitionsNumFrames)
-					doing_cameraTransition(CAMERA_MOVEMENT.XROTATION,rotation.x,xrotationInitialValue,modeTransitionsNumFrames)
-					doing_cameraTransition(CAMERA_MOVEMENT.YMOVEMENT,position.y,ymovementInitialValue,modeTransitionsNumFrames)
-					doing_cameraTransition(CAMERA_MOVEMENT.XMOVEMENT,position.x,xmovementInitialValue,modeTransitionsNumFrames)
-					doing_cameraTransition(CAMERA_MOVEMENT.YCAMERAROTATION,_camera3D.rotation.y,ycameraRotationInitialValue,modeTransitionsNumFrames)
-					doing_cameraTransition(CAMERA_MOVEMENT.XCAMERAROTATION,_camera3D.rotation.x,xcameraRotationInitialValue,modeTransitionsNumFrames)
-					doing_cameraTransition(CAMERA_MOVEMENT.ZOOM,_spring_arm.spring_length,zoomInitialValue,modeTransitionsNumFrames)
 
 # Gets the camera controller component's context for character's change
 func get_context() -> CameraControllerData :
