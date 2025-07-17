@@ -119,49 +119,6 @@ var xcameraRotationInitialValue : float = 0.0
 ##Initial Value of the Spring-arm length
 @export var zoomInitialValue : float = 0.0
 
-
-# Initial values for the different movements it is the fixed value when disabled
-@export_group("FIRST PERSON Initial Values Preset")
-
-var FP_yrotationInitialValue : float = 0.0
-##FIRST_PERSON Initial Value of the Y Rotation of the camera controler (Yaw axis) [Spring-arm angle]
-@export_range(-180.0,180.0) var FP_yrotationInitialValueGrad : float = 0.0 :
-	set (value):
-		FP_yrotationInitialValueGrad = value
-		FP_yrotationInitialValue = value * PI / 180
-
-var FP_xrotationInitialValue : float = 0.0
-##FIRST_PERSON Initial Value of the X Rotation of the camera controler (Pitch axis) [Spring-arm angle]
-@export_range(-90.0, 90.0) var FP_xrotationInitialValueGrad : float = 0.0 :
-	set (value):
-		FP_xrotationInitialValueGrad = value
-		FP_xrotationInitialValue = value * PI / 180
-
-##FIRST_PERSON Initial Value of the VERTICAL position of the camera
-@export var FP_ymovementInitialValue : float = 0.0
-
-##FIRST_PERSON Initial Value of the HORIZONTAL position of the camera
-@export var FP_xmovementInitialValue : float = 0.0
-
-##FIRST_PERSON Initial Value of the Y Rotation of the camera (Yaw axis) [Camera angle]
-var FP_ycameraRotationInitialValue : float = 0.0
-
-##FIRST_PERSON Initial Value of the Y Rotation of the camera (Yaw axis) [Camera angle]
-@export_range(-180.0,180.0) var FP_ycameraRotationInitialValueGrad : float = 0.0 :
-	set (value):
-		FP_ycameraRotationInitialValueGrad = value
-		FP_ycameraRotationInitialValue = value * PI / 180
-
-var FP_xcameraRotationInitialValue : float = 0.0
-##FIRST_PERSON Initial Value of the X Rotation of the camera (Pitch axis) [Camera angle]
-@export_range(-90.0,90.0) var FP_xcameraRotationInitialValueGrad : float = 0.0 :
-	set (value):
-		FP_xcameraRotationInitialValueGrad = value
-		FP_xcameraRotationInitialValue = value * PI / 180
-
-@export var FP_zoomInitialValue : float = 0.0
-
-
 # Adjusting parameters for sensitivity of the different movements
 @export_group("Camera actions sensitivity")
 
@@ -510,7 +467,7 @@ func change_cameraMode(value : CAMERA_MODE):
 					doing_cameraTransition(CAMERA_MOVEMENT.ZOOM,_spring_arm.spring_length,zoomInitialValue,modeTransitionsNumFrames)
 
 			CAMERA_MODE.FIRST_PERSON:
-					yrotationEnabled=false
+					yrotationEnabled=true
 					xrotationEnabled=true
 					ymovementEnabled=false
 					xmovementEnabled=false
@@ -521,13 +478,13 @@ func change_cameraMode(value : CAMERA_MODE):
 					# The first person camera mode is a special movement, although the cameracontroller's rotation movement is enabled
 					# it should be positioned correctly to the initial value so that the camera is point to the forward vector
 					# It should be configured in the right mode modifying the InitialValues
-					doing_cameraTransition(CAMERA_MOVEMENT.YROTATION,rotation.y,FP_yrotationInitialValue,modeTransitionsNumFrames)
-					doing_cameraTransition(CAMERA_MOVEMENT.XROTATION,rotation.x,FP_xrotationInitialValue,modeTransitionsNumFrames)
-					doing_cameraTransition(CAMERA_MOVEMENT.YMOVEMENT,position.y,FP_ymovementInitialValue,modeTransitionsNumFrames)
-					doing_cameraTransition(CAMERA_MOVEMENT.XMOVEMENT,position.x,FP_xmovementInitialValue,modeTransitionsNumFrames)
-					doing_cameraTransition(CAMERA_MOVEMENT.XCAMERAROTATION,_camera3D.rotation.x,FP_xcameraRotationInitialValue,modeTransitionsNumFrames)
-					doing_cameraTransition(CAMERA_MOVEMENT.YCAMERAROTATION,_camera3D.rotation.y,FP_ycameraRotationInitialValue,modeTransitionsNumFrames)
-					doing_cameraTransition(CAMERA_MOVEMENT.ZOOM,_spring_arm.spring_length,FP_zoomInitialValue,modeTransitionsNumFrames)
+					doing_cameraTransition(CAMERA_MOVEMENT.YROTATION,rotation.y,yrotationInitialValue,modeTransitionsNumFrames)
+					doing_cameraTransition(CAMERA_MOVEMENT.XROTATION,rotation.x,xrotationInitialValue,modeTransitionsNumFrames)
+					doing_cameraTransition(CAMERA_MOVEMENT.YMOVEMENT,position.y,ymovementInitialValue,modeTransitionsNumFrames)
+					doing_cameraTransition(CAMERA_MOVEMENT.XMOVEMENT,position.x,xmovementInitialValue,modeTransitionsNumFrames)
+					doing_cameraTransition(CAMERA_MOVEMENT.XCAMERAROTATION,_camera3D.rotation.x,xcameraRotationInitialValue,modeTransitionsNumFrames)
+					doing_cameraTransition(CAMERA_MOVEMENT.YCAMERAROTATION,_camera3D.rotation.y,ycameraRotationInitialValue,modeTransitionsNumFrames)
+					doing_cameraTransition(CAMERA_MOVEMENT.ZOOM,_spring_arm.spring_length,zoomInitialValue,modeTransitionsNumFrames)
 
 			CAMERA_MODE.FULL:
 					yrotationEnabled=true
@@ -625,46 +582,6 @@ func set_rightButtonPressed( value : bool):
 # Basically disables in the editor the options not able to be configured in a specific cameraMode
 # Also if a camera movement is explicitly disabled it hides the range associated to this option
 func _validate_property(property: Dictionary):
-
-	 # Initial values Options only in FIRST_PERSON
-	if property.name in ["FP_yrotationInitialValueGrad"] and ( cameraMode == CAMERA_MODE.STATIC or cameraMode == CAMERA_MODE.THIRD_PERSON or cameraMode == CAMERA_MODE.THIRD_PERSON_ZOOM or cameraMode == CAMERA_MODE.FULL):
-		property.usage = PROPERTY_USAGE_NO_EDITOR
-	if property.name in ["FP_xrotationInitialValueGrad"] and ( cameraMode == CAMERA_MODE.STATIC or cameraMode == CAMERA_MODE.THIRD_PERSON or cameraMode == CAMERA_MODE.THIRD_PERSON_ZOOM or cameraMode == CAMERA_MODE.FULL):
-		property.usage = PROPERTY_USAGE_NO_EDITOR
-	if property.name in ["FP_ymovementInitialValue"] and ( cameraMode == CAMERA_MODE.STATIC or cameraMode == CAMERA_MODE.THIRD_PERSON or cameraMode == CAMERA_MODE.THIRD_PERSON_ZOOM or cameraMode == CAMERA_MODE.FULL):
-		property.usage = PROPERTY_USAGE_NO_EDITOR
-	if property.name in ["FP_xmovementInitialValue"] and ( cameraMode == CAMERA_MODE.STATIC or cameraMode == CAMERA_MODE.THIRD_PERSON or cameraMode == CAMERA_MODE.THIRD_PERSON_ZOOM or cameraMode == CAMERA_MODE.FULL):
-		property.usage = PROPERTY_USAGE_NO_EDITOR
-	if property.name in ["FP_ycameraRotationInitialValueGrad"] and ( cameraMode == CAMERA_MODE.STATIC or cameraMode == CAMERA_MODE.THIRD_PERSON or cameraMode == CAMERA_MODE.THIRD_PERSON_ZOOM or cameraMode == CAMERA_MODE.FULL):
-		property.usage = PROPERTY_USAGE_NO_EDITOR
-	if property.name in ["FP_xcameraRotationInitialValueGrad"] and ( cameraMode == CAMERA_MODE.STATIC or cameraMode == CAMERA_MODE.THIRD_PERSON or cameraMode == CAMERA_MODE.THIRD_PERSON_ZOOM or cameraMode == CAMERA_MODE.FULL):
-		property.usage = PROPERTY_USAGE_NO_EDITOR
-	if property.name in ["FP_zoomInitialValue"] and ( cameraMode == CAMERA_MODE.STATIC or cameraMode == CAMERA_MODE.THIRD_PERSON or cameraMode == CAMERA_MODE.THIRD_PERSON_ZOOM or cameraMode == CAMERA_MODE.FULL):
-		property.usage = PROPERTY_USAGE_NO_EDITOR
-
-	# Initial Values Options in all modes except FIRST_PERSON
-	if property.name in ["yrotationInitialValueGrad"] and cameraMode == CAMERA_MODE.FIRST_PERSON:
-		property.usage = PROPERTY_USAGE_NO_EDITOR
-	if property.name in ["xrotationInitialValueGrad"] and cameraMode == CAMERA_MODE.FIRST_PERSON:
-		property.usage = PROPERTY_USAGE_NO_EDITOR
-	if property.name in ["ymovementInitialValue"] and cameraMode == CAMERA_MODE.FIRST_PERSON:
-		property.usage = PROPERTY_USAGE_NO_EDITOR
-	if property.name in ["xmovementInitialValue"] and cameraMode == CAMERA_MODE.FIRST_PERSON:
-		property.usage = PROPERTY_USAGE_NO_EDITOR
-	if property.name in ["ycameraRotationInitialValueGrad"] and cameraMode == CAMERA_MODE.FIRST_PERSON:
-		property.usage = PROPERTY_USAGE_NO_EDITOR
-	if property.name in ["xcameraRotationInitialValueGrad"] and cameraMode == CAMERA_MODE.FIRST_PERSON:
-		property.usage = PROPERTY_USAGE_NO_EDITOR
-	if property.name in ["zoomInitialValue"] and cameraMode == CAMERA_MODE.FIRST_PERSON:
-		property.usage = PROPERTY_USAGE_NO_EDITOR
-	if property.name in ["yrotationBehind"] and cameraMode == CAMERA_MODE.FIRST_PERSON:
-		property.usage = PROPERTY_USAGE_NO_EDITOR
-	if property.name in ["xmovementWithParent"] and cameraMode == CAMERA_MODE.FIRST_PERSON:
-		property.usage = PROPERTY_USAGE_NO_EDITOR
-	if property.name in ["marginXMovement"] and cameraMode == CAMERA_MODE.FIRST_PERSON:
-		property.usage = PROPERTY_USAGE_NO_EDITOR
-
-
 
 	# Only in FULL mode. X,Y MOVEMENT & X,Y CAMERAROTATION
 	if property.name in ["ymovementEnabled"]:
