@@ -1,0 +1,16 @@
+[gd_scene load_steps=6 format=3 uid="uid://dgwv700lj5ese"]
+
+[ext_resource type="AnimationLibrary" uid="uid://dht8pvtv82aw3" path="res://assets/models/manequin2/animations/Fall.glb" id="1_ygbe2"]
+[ext_resource type="AnimationLibrary" uid="uid://c0r1he2dk75yu" path="res://assets/models/manequin2/animations/Idle.glb" id="2_3odno"]
+[ext_resource type="AnimationLibrary" uid="uid://dts30rumeqjur" path="res://assets/models/manequin2/animations/Jump.glb" id="3_askeg"]
+[ext_resource type="AnimationLibrary" uid="uid://b548thi4nw33l" path="res://assets/models/manequin2/animations/Run.glb" id="4_sn2de"]
+[ext_resource type="AnimationLibrary" uid="uid://dbh2usa2s7lt2" path="res://assets/models/manequin2/animations/Walk.glb" id="5_aht0a"]
+
+[node name="AnimationPlayer" type="AnimationPlayer"]
+libraries = {
+&"Fall": ExtResource("1_ygbe2"),
+&"Idle": ExtResource("2_3odno"),
+&"Jump": ExtResource("3_askeg"),
+&"Run": ExtResource("4_sn2de"),
+&"Walk": ExtResource("5_aht0a")
+}

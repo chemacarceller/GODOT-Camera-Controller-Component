@@ -1,0 +1,17 @@
+# GODOT-Camera-Controller-Component
+
+It consists of a root Node3D containing an attached SpringArm3D node, which in turn contains an attached Camera3D node. 
+
+This component, in its associated script, has a multitude of configurable parameters based on different configuration modes.
+
+The demo folder contains an example of usage of this component
+
+Also this component has been tested in https://jocarpe.itch.io/third-person-character-demo
+
+This is a demo in continuous development to test all the components developed and in the process of future development. 
+
+It also adds the ability to change characters and view resource consumption via a plugin. 
+
+A detailed explanation of how the demo works is available on the itch.io page indicated. 
+
+Feel free to check it out in either of its two versions, Windows or Linux.
