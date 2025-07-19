@@ -45,23 +45,23 @@ enum CAMERA_MOVEMENT {
 }
 
 # Enable / Disable Status of each movement
-#Checkbox for the Y Rotation of the camera controler (Yaw axis) [Spring-arm angle]
+
+# Checkbox for the Y Rotation of the camera controler (Yaw axis) [Spring-arm angle]
 var _yrotationEnabled : bool = true
-#Checkbox for the X Rotation of the camera controler (Pitch axis) [Spring-arm angle]
+# Checkbox for the X Rotation of the camera controler (Pitch axis) [Spring-arm angle]
 var _xrotationEnabled : bool = true
-#Checkbox for the VERTICAL position of the camera
+# Checkbox for the VERTICAL position of the camera
 var _ymovementEnabled : bool = true
-#Checkbox for the HORIZONTAL position of the camera
+# Checkbox for the HORIZONTAL position of the camera
 var _xmovementEnabled : bool = true
-#Checkbox for the Y Rotation of the camera (Yaw axis) [Camera angle]
+# Checkbox for the Y Rotation of the camera (Yaw axis) [Camera angle]
 var _ycameraRotationEnabled : bool = true
-#Checkbox for the X Rotation of the camera (Pitch axis) [Camera angle]
+# Checkbox for the X Rotation of the camera (Pitch axis) [Camera angle]
 var _xcameraRotationEnabled : bool = true 
-#Checkbox for the Spring-arm length changes
+# Checkbox for the Spring-arm length changes
 var _zoomEnabled : bool = true
 
 # ==================================  EXPORTED VARIABLES ===================================================
-
 
 # CameraController script, it has also the camera movement
 # rotating left right and up down of camera controller by moving mouse
@@ -131,14 +131,6 @@ var _zoomEnabled : bool = true
 
 ##Indicates if the camera must rotate to position behind the character/pawn when activeted
 @export var yrotationBehind : Dictionary[CAMERA_MODE,bool]
-
-##Indicates if the camera must move in the x-axis with the parent (default option)
-@export var xmovementWithParent : Dictionary[CAMERA_MODE,bool] :
-	set (value):
-		xmovementWithParent = value
-
-##Margin in which there is no camera x movement following the parent
-@export var marginXMovement : Dictionary[CAMERA_MODE,float]
 
 var yrotationInitialValue : float = 0.0
 ##Initial Value of the Y Rotation of the camera controler (Yaw axis) [Spring-arm angle]
@@ -272,12 +264,6 @@ var xcameraRotationInitialValue : float = 0.0
 @onready var _spring_arm : SpringArm3D = get_springarm()
 @onready var _camera3D : Camera3D = get_camera3d()
 
-# For the xmovement when the xmovement doesnt go with the parent
-var _parentOffset : float = 0.0
-@onready var _parentXPos :float = get_parent().global_position.x
-@onready var _cameraXPos :float = global_position.x
-var _parentXPos2 : float = 0.0
-
 # Indicates if the middle or right button are pressed
 var _middleButtonPressed : bool = false
 var _rightButtonPressed : bool = false
@@ -295,7 +281,8 @@ func _notification(what):
 
 func _ready() -> void:
 	# Fixing the camera controller from its initial values
-	# The rotation is the root component rotation so that the component can be assigned as the directionalObject of a movement component and not the springarm
+	# The position and rotation is of the root component 
+	# Rotation so that the component can be assigned as the directionalObject of a movement component and not the springarm
 	position.y = ymovementInitialValue
 	position.x = xmovementInitialValue
 	rotation.y = yrotationInitialValue
@@ -312,19 +299,6 @@ func _ready() -> void:
 		_spring_arm.spring_length=fpZoomInitialValue
 	else:
 		_spring_arm.spring_length=zoomInitialValue
-
-# In each physic process step if we dont want that the camera follows the parent
-func _physics_process(_delta: float) -> void:
-	# Only if it is enabled
-	if _isEnabled :
-		if xmovementWithParent.has(cameraMode) and not xmovementWithParent[cameraMode]:
-			_parentXPos2 = get_parent().global_position.x
-			_parentOffset = _parentXPos2 - _parentXPos
-			_parentXPos = _parentXPos2
-			_cameraXPos = global_position.x
-			var marginX : float = marginXMovement[cameraMode] if marginXMovement.has(cameraMode) else 0.0
-			if (_parentOffset >= 0.0 and (_cameraXPos - _parentXPos2) > -marginX) or (_parentOffset <= 0.0 and (_cameraXPos - _parentXPos2) < marginX):
-				global_position.x += -_parentOffset
 
 # Resolving inputs for the camera, cannot be configured outside
 # Developer decision. Mouse movement to move the camera and middle wheel rolling button for zoom
