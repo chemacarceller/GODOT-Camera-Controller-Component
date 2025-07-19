@@ -581,6 +581,8 @@ func set_context(context : CameraControllerData) -> void:
 		_ymovementEnabled = context.cameraControllerYMovementEnabled
 		_xmovementEnabled = context.cameraControllerXMovementEnabled
 		_zoomEnabled = context.cameraControllerZoomEnabled
+		
+		cameraMode = context.cameraControllerMode
 
 
 # Getters and setters methods
