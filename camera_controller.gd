@@ -309,6 +309,7 @@ func _ready() -> void:
 func _input(event):
 	# Only if it is enabled
 	if _isEnabled :
+		
 		# Mouse input -> Travelling
 		if event is InputEventMouseButton:
 			# if cameraRotation is enabled we check if right button is pressed activating the flag
@@ -456,6 +457,18 @@ func doing_cameraTransition(cameraMovement : CAMERA_MOVEMENT, initialValue: floa
 func change_cameraMode(value : CAMERA_MODE):
 	# Only if it is enabled
 	if _isEnabled :
+		
+		# Clamp rotations between -PI and PI, some are not strictly necessary because they are already clamped
+		while(rotation.y > PI) : rotation.y -= 2*PI
+		while(rotation.y < -PI) : rotation.y += 2*PI
+		while(rotation.x > PI) : rotation.x -= 2*PI
+		while(rotation.x < -PI) : rotation.x += 2*PI
+		while(_camera3D.rotation.y > PI) : _camera3D.rotation.y -= 2*PI
+		while(_camera3D.rotation.y < -PI) : _camera3D.rotation.y += 2*PI
+		while(_camera3D.rotation.x > PI) : _camera3D.rotation.x -= 2*PI
+		while(_camera3D.rotation.x < -PI) : _camera3D.rotation.x += 2*PI
+
+		
 		# Assign the new cameraMode
 		cameraMode = value
 
@@ -472,6 +485,7 @@ func change_cameraMode(value : CAMERA_MODE):
 				_ycameraRotationEnabled=false
 				_xcameraRotationEnabled=false
 				_zoomEnabled=false
+				
 				if (yrotationBehind.has(CAMERA_MODE.STATIC) and yrotationBehind[CAMERA_MODE.STATIC]):
 					doing_cameraTransition(CAMERA_MOVEMENT.YROTATION,rotation.y,get_parent().get_armature().rotation.y,modeTransitionsNumFrames)
 				else :
