@@ -582,8 +582,6 @@ func set_context(context : CameraControllerData) -> void:
 		_xmovementEnabled = context.cameraControllerXMovementEnabled
 		_zoomEnabled = context.cameraControllerZoomEnabled
 
-		change_cameraMode(context.cameraControllerMode)
-
 
 # Getters and setters methods
 func get_springarm() -> SpringArm3D:
