@@ -2,9 +2,7 @@ extends CharacterBody3D
 
 @export var movementComponent : PackedScene
 
-
 var _movementComponent : Node = null
-var _rotationSensitivity : float = 1.5
 
 func _ready() -> void:
 	_movementComponent = movementComponent.instantiate()
@@ -21,7 +19,7 @@ func _ready() -> void:
 	
 	add_child(_movementComponent)
 
-func _input(event: InputEvent) -> void:
+func _input(_event: InputEvent) -> void:
 
 	# If move_run action changes, the runing variable of the movement modified
 	if Input.is_action_pressed("move_run_change"):
