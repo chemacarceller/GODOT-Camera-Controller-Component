@@ -187,7 +187,10 @@ var xcameraRotationInitialValue : float = 0.0
 
 
 
-@export_group("Yaw axis Spring-arm angle Rotation")
+@export_group("Yaw axis Angle Rotation")
+
+##Indicates if this limits are taken into account
+@export var YRotationLimitsEnabled : bool = false
 
 ##Up value for the X Rotation of the camera controler (Pitch axis) [Spring-arm angle]
 @export var LEFT_CAMERA_ANGLE : int = 180
@@ -197,7 +200,7 @@ var xcameraRotationInitialValue : float = 0.0
 
 
 
-@export_group("Pitch axis Spring-arm angle Rotation")
+@export_group("Pitch axis Angle Rotation")
 
 ##Up value for the X Rotation of the camera controler (Pitch axis) [Spring-arm angle]
 @export var UP_CAMERA_ANGLE : int = 20
@@ -227,7 +230,7 @@ var xcameraRotationInitialValue : float = 0.0
 
 
 
-@export_group("Yaw axis Camera angle Rotation")
+@export_group("Yaw axis Camera Angle Rotation")
 
 ##Up Value for the X Rotation of the camera (Pitch axis) [Camera angle]
 @export var LEFT_CAMERA3D_ANGLE : int = 20
@@ -238,7 +241,7 @@ var xcameraRotationInitialValue : float = 0.0
 
 
 
-@export_group("Pitch axis Camera angle Rotation")
+@export_group("Pitch axis Camera Angle Rotation")
 
 ##Up Value for the X Rotation of the camera (Pitch axis) [Camera angle]
 @export var UP_CAMERA3D_ANGLE : int = 20
@@ -349,13 +352,19 @@ func _input(event):
 				if not _middleButtonPressed and not _rightButtonPressed:
 					# If the rotation around armature is enables we do this rotation movement
 					if (_yrotationEnabled) :
-						rotation.y = clamp(rotation.y - event.relative.x /1000 * rotationSensitivity, -PI*LEFT_CAMERA_ANGLE/100, PI*RIGHT_CAMERA_ANGLE/100)
+						if YRotationLimitsEnabled :
+							rotation.y = clamp(rotation.y - event.relative.x /1000 * rotationSensitivity, -PI*LEFT_CAMERA_ANGLE/100, PI*RIGHT_CAMERA_ANGLE/100)
+						else :
+							rotation.y = rotation.y - event.relative.x /1000 * rotationSensitivity
 					if (_xrotationEnabled) :
 						rotation.x = clamp(rotation.x - event.relative.y /1000 * rotationSensitivity, -PI*UP_CAMERA_ANGLE/100, PI*DOWN_CAMERA_ANGLE/100)
 			# case neither the cameraRotation nor cameraMovement are enabled abgesehen von button pressed we check for rotation around armature movement
 			elif (_yrotationEnabled or _xrotationEnabled) :
 				if (_yrotationEnabled) :
-					rotation.y = clamp(rotation.y - event.relative.x /1000 * rotationSensitivity, -PI*LEFT_CAMERA_ANGLE/100, PI*RIGHT_CAMERA_ANGLE/100)
+					if YRotationLimitsEnabled :
+						rotation.y = clamp(rotation.y - event.relative.x /1000 * rotationSensitivity, -PI*LEFT_CAMERA_ANGLE/100, PI*RIGHT_CAMERA_ANGLE/100)
+					else :
+						rotation.y = rotation.y - event.relative.x /1000 * rotationSensitivity
 				if (_xrotationEnabled) :
 					rotation.x = clamp(rotation.x - event.relative.y /1000 * rotationSensitivity, -PI*UP_CAMERA_ANGLE/100, PI*DOWN_CAMERA_ANGLE/100)
 
