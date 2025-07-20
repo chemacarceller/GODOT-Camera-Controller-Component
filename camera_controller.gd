@@ -1,7 +1,7 @@
 @tool class_name CameraController extends Node3D
 
 
-# Property to activate or deactivate the controller component
+# Property to activate or deactivate the controller component for example when the game is paused
 @export var _isEnabled : bool = true
 
 func set_IsEnabled(value : bool) -> void :
@@ -12,7 +12,7 @@ func get_IsEnebled() -> bool :
 
 # =============================================== ENUMS =====================================================
 
-# Different Camera's Modes
+# Different Camera's Modes. More to come
 enum CAMERA_MODE {
 	## Basic CAMERA_MODE points forward no movement possible
 	STATIC,
@@ -26,52 +26,52 @@ enum CAMERA_MODE {
 	FULL
 }
 
-
+# Different Camera's Movements.
 enum CAMERA_MOVEMENT {
-	##Yaw-axis Spring-arm angle rotation movement
+	##Yaw-axis Camera Controller Y-axis Rotation movement
 	YROTATION,
-	##Pitch-axis Spring-arm angle rotation movement
+	##Pitch-axis Camera Controller X-axis Rotation movement
 	XROTATION,
-	##Vertical CameraController movement
+	##Vertical Camera Controller movement
 	YMOVEMENT,
-	##Horizontal CameraController movement
+	##Horizontal Camera Controller movement
 	XMOVEMENT,
-	##Yaw-axis Camera angle rotation movement
+	##Yaw-axis Camera Y-axis rotation movement
 	YCAMERAROTATION,
-	##Yaw-axis Camera angle rotation movement
+	##Yaw-axis Camera X-axis rotation movement
 	XCAMERAROTATION,
-	##Yaw-axis Camera Y movement
+	##Yaw-axis SpringArm length variation
 	ZOOM
 }
 
-# Enable / Disable Status of each movement
+# Enable / Disable Status of each movement, set only by the camera's mode available
 
-# Checkbox for the Y Rotation of the camera controler (Yaw axis) [Spring-arm angle]
+# Checkbox for the Y Rotation of the camera controller (Yaw axis)
 var _yrotationEnabled : bool = true
-# Checkbox for the X Rotation of the camera controler (Pitch axis) [Spring-arm angle]
+# Checkbox for the X Rotation of the camera controller (Pitch axis)
 var _xrotationEnabled : bool = true
-# Checkbox for the VERTICAL position of the camera
+# Checkbox for the VERTICAL position of the camera controller
 var _ymovementEnabled : bool = true
-# Checkbox for the HORIZONTAL position of the camera
+# Checkbox for the HORIZONTAL position of the camera controller
 var _xmovementEnabled : bool = true
-# Checkbox for the Y Rotation of the camera (Yaw axis) [Camera angle]
+# Checkbox for the Y Rotation of the camera (Yaw axis)
 var _ycameraRotationEnabled : bool = true
-# Checkbox for the X Rotation of the camera (Pitch axis) [Camera angle]
+# Checkbox for the X Rotation of the camera (Pitch axis)
 var _xcameraRotationEnabled : bool = true 
 # Checkbox for the Spring-arm length changes
 var _zoomEnabled : bool = true
 
 # ==================================  EXPORTED VARIABLES ===================================================
 
-# CameraController script, it has also the camera movement
-# rotating left right and up down of camera controller by moving mouse
-# travelling with rolling of the wheel button
-# up-down left-right camera movement and rotating left right and up down of camera
-# every movement except yaw's rotations clamped
+# CameraController script
+# Rotating left right and up down of camera controller by moving mouse x,y axis
+# Travelling Spring-Arm length changes with rolling of the mouse wheel
+# up-down left-right camera controller movement (middle button pressed and mouse move) and rotating left right of camera (right button pressed and mouse move)
 
 # Usage mode of the CameraController
 @export_group("Camera Mode Preset")
 
+# Once is selected the movement availables are activated and notify the change made
 ##Camera mode selection
 @export var cameraMode : CAMERA_MODE = CAMERA_MODE.FULL:
 	set(value):
@@ -119,6 +119,7 @@ var _zoomEnabled : bool = true
 					_xcameraRotationEnabled=true
 		notify_property_list_changed()
 
+# frames = 1 / deltaTime
 ##Camera mode transition's time in frames 
 @export_range (1,100) var modeTransitionsNumFrames : int = 60
 
@@ -129,7 +130,7 @@ var _zoomEnabled : bool = true
 # For zoom parameter there is a parameter for First person which is negative or the others which is positive
 @export_group("Initial Values Preset")
 
-##Indicates if the camera must rotate to position behind the character/pawn when activeted
+##Indicates if the camera must rotate to position behind the character/pawn when activeted. The mode must be selected and checked
 @export var yrotationBehind : Dictionary[CAMERA_MODE,bool]
 
 var yrotationInitialValue : float = 0.0
@@ -189,53 +190,53 @@ var xcameraRotationInitialValue : float = 0.0
 
 @export_group("Yaw axis Angle Rotation")
 
-##Indicates if this limits are taken into account
+##Indicates if thess limits are taken into account. If false no restriction
 @export var YRotationLimitsEnabled : bool = false
 
-##Up value for the X Rotation of the camera controler (Pitch axis) [Spring-arm angle]
+##Up value for the Y Rotation of the camera controller (Pitch axis)
 @export var LEFT_CAMERA_ANGLE : int = 180
 
-##Down value for the X Rotation of the camera controler (Pitch axis) [Spring-arm angle]
+##Down value for the Y Rotation of the camera controller (Pitch axis)
 @export var RIGHT_CAMERA_ANGLE : int = 180
 
 
 
 @export_group("Pitch axis Angle Rotation")
 
-##Up value for the X Rotation of the camera controler (Pitch axis) [Spring-arm angle]
+##Up value for the X Rotation of the camera controller (Pitch axis)
 @export var UP_CAMERA_ANGLE : int = 20
 
-##Down value for the X Rotation of the camera controler (Pitch axis) [Spring-arm angle]
+##Down value for the X Rotation of the camera controller (Pitch axis)
 @export var DOWN_CAMERA_ANGLE : int = 10
 
 
 
 @export_group("Camera VERTICAL position")
 
-##Up value for the VERTICAL position of the camera
+##Up value for the VERTICAL position of the camera controller
 @export var UP_CAMERA_HEIGHT : float = 8.0
 
-##Down value for the VERTICAL position of the camera
+##Down value for the VERTICAL position of the camera controller
 @export var DOWN_CAMERA_HEIGHT : float = 1.8
 
 
 
 @export_group("Camera HORIZONTAL position")
 
-##Left value for the HORIZONTAL position of the camera
+##Left value for the HORIZONTAL position of the camera controller
 @export var LEFT_CAMERA_WIDTH : float = -8.0
 
-##Right value for the HORIZONTAL position of the camera
+##Right value for the HORIZONTAL position of the camera controller
 @export var RIGHT_CAMERA_WIDTH : float = 8.8
 
 
 
 @export_group("Yaw axis Camera Angle Rotation")
 
-##Up Value for the X Rotation of the camera (Pitch axis) [Camera angle]
+##Up Value for the X Rotation of the camera (Pitch axis) [Camera3d angle]
 @export var LEFT_CAMERA3D_ANGLE : int = 20
 
-##Down Value for the X Rotation of the camera (Pitch axis) [Camera angle]
+##Down Value for the X Rotation of the camera (Pitch axis) [Camera3d angle]
 @export var RIGHT_CAMERA3D_ANGLE : int = 20
 
 
@@ -243,10 +244,10 @@ var xcameraRotationInitialValue : float = 0.0
 
 @export_group("Pitch axis Camera Angle Rotation")
 
-##Up Value for the X Rotation of the camera (Pitch axis) [Camera angle]
+##Up Value for the X Rotation of the camera (Pitch axis) [Camera3d angle]
 @export var UP_CAMERA3D_ANGLE : int = 20
 
-##Down Value for the X Rotation of the camera (Pitch axis) [Camera angle]
+##Down Value for the X Rotation of the camera (Pitch axis) [Camera3d angle]
 @export var DOWN_CAMERA3D_ANGLE : int = 20
 
 
@@ -263,7 +264,7 @@ var xcameraRotationInitialValue : float = 0.0
 
 # ================================ INTERNAL VARIABLES ==================================================
 
-#Getting SpringArm Component for future usage
+# Getting SpringArm Component for future usage
 @onready var _spring_arm : SpringArm3D = get_springarm()
 @onready var _camera3D : Camera3D = get_camera3d()
 
@@ -305,7 +306,7 @@ func _ready() -> void:
 
 # Resolving inputs for the camera, cannot be configured outside
 # Developer decision. Mouse movement to move the camera and middle wheel rolling button for zoom
-# The unusual rotation and movements via right - middle button clicked and mouse move
+# The camera3d rotation and movement up down via right - middle button clicked and mouse move
 func _input(event):
 	# Only if it is enabled
 	if _isEnabled :
@@ -378,6 +379,7 @@ func _input(event):
 # otherwise can be assigned independently
 
 # The function's structure of all these function's are identical so only one function is created indicating the camera movement to be done
+# framesNum = 1 / deltaTime
 func doing_cameraTransition(cameraMovement : CAMERA_MOVEMENT, initialValue: float, finalValue: float, framesNum : int):
 	# Only if it is enabled
 	if _isEnabled:
@@ -408,7 +410,7 @@ func doing_cameraTransition(cameraMovement : CAMERA_MOVEMENT, initialValue: floa
 
 		# Loop until get the last value of the lerp
 		while (true):
-			# Once we arrive the step value 1 it means one more cycle and aus
+			# Once we arrive the step value 1 it means one more cycle to adjust the movement und aus
 			if (step >= 1):
 				lastLoopCycle = true
 
@@ -441,7 +443,7 @@ func doing_cameraTransition(cameraMovement : CAMERA_MOVEMENT, initialValue: floa
 				break
 
 			# Corroutine stoping function when frame's end comes
-			await get_tree().process_frame	
+			await get_tree().process_frame
 
 
 #========================================================================================================================================
@@ -559,6 +561,7 @@ func change_cameraMode(value : CAMERA_MODE):
 
 
 # Gets the camera controller component's context for character's change
+# The CameraControllerData object is used stores in the camera_controller_data.gd script
 func get_context() -> CameraControllerData :
 	# Only if it is enabled
 	if _isEnabled :
@@ -588,7 +591,7 @@ func get_context() -> CameraControllerData :
 # Sets the camera controller component's context for character's
 func set_context(context : CameraControllerData) -> void:
 	# Only if it is enabled
-	if _isEnabled :
+	if _isEnabled and context != null :
 		rotation = context.cameraControllerRotation
 		position = context.cameraControllerPosition
 		get_node("SpringArm3D/Camera3D").rotation = context.cameraRotation
