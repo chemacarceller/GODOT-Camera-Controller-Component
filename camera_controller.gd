@@ -280,8 +280,8 @@ var _rightButtonPressed : bool = false
 
 func _notification(what):
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
-		_spring_arm.queue_free()
-		_camera3D.queue_free()
+		_spring_arm = null
+		_camera3D = null
 
 func _ready() -> void:
 	# Fixing the camera controller from its initial values
@@ -309,7 +309,7 @@ func _ready() -> void:
 # The camera3d rotation and movement up down via right - middle button clicked and mouse move
 func _input(event):
 	# Only if it is enabled
-	if _isEnabled :
+	if _isEnabled and _spring_arm != null and _camera3D != null :
 		
 		# Mouse input -> Travelling
 		if event is InputEventMouseButton:

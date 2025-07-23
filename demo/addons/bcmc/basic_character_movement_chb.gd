@@ -265,9 +265,9 @@ var _existJumpInput : bool = false
 
 func _notification(what):
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
-		armature.queue_free()
-		directionalObject.queue_free()
-		_myCharacter.queue_free()
+		armature = null
+		directionalObject = null
+		_myCharacter = null
 
 func _ready() -> void:
 
@@ -300,7 +300,7 @@ func _physics_process(delta: float) -> void:
 	var _rotationAngle : float 
 	
 	# Only if it is enabled
-	if isEnabled :
+	if isEnabled and _myCharacter != null:
 
 		# Establishing normalized direction of movement
 		if not _existLeftInput or not _existRightInput:
